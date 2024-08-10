@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import { Loader } from '@googlemaps/js-api-loader';
+import MapContainer from './MapContainer';
 
-function App() {
+// API key of the google map
+const GOOGLE_MAP_API_KEY = 'AIzaSyCjcpd5xLXdmX3Y9CyNZDxUi4Q6ND3kyec';
+
+const App = () => {
+  const [loadMap, setLoadMap] = useState(false);
+
+  useEffect(() => {
+    const options = {
+      apiKey: GOOGLE_MAP_API_KEY,
+      version: "weekly",
+      libraries: ['geometry']
+    };
+
+    new Loader(options).load().then(() => {
+      setLoadMap(true);
+    }).catch(e => {
+      console.error('Sorry, something went wrong: Please try again later. Error:', e);
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {loadMap ? <MapContainer /> : <div>Loading Map...</div>}
     </div>
   );
 }
